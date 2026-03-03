@@ -15,8 +15,11 @@ todo_router = APIRouter(tags=["Todo Management"])
 
 @todo_router.post("/todos")
 def create_todo_action(request: Request, text: Annotated[str, Form()], db:SessionDep, user:AuthDep):
-    # Implement task 4.2 here. Remove the line below that says "pass" once complete
-    pass
+    user.todos.append(Todo(text=text))
+    db.add(user)
+    db.commit()
+    flash(request, "Item created successfully")
+    return RedirectResponse(url="/app", status_code=status.HTTP_303_SEE_OTHER)
 
 @todo_router.post('/toggle/{id}')
 async def toggle_todo_action(request: Request, id: int, db:SessionDep, user:AuthDep):

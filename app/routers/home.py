@@ -23,7 +23,12 @@ async def index(
 @home_router.get("/app", response_class=HTMLResponse)
 async def app_dashbaord(
     request: Request,
-    user: AuthDep
+    user: AuthDep # The AuthDep dependency will check if the user is authenticated by verifying the access token in the cookie. If the user is authenticated, it will return the user object which can be used in the route function. If not authenticated, it will raise an HTTPException and prevent access to this route. This ensures that only authenticated users can access the dashboard of the app.
 ):
-    # Implement task 3.5 here. Remove the line below that says "pass" once complete
-    pass
+    return templates.TemplateResponse( # Render the todo.html template when the user navigates to /app. This is the main dashboard of the app where users can manage their todos. The template extends layout.html which contains the common layout for all pages.
+        request=request, 
+        name="todo.html",
+        context={
+            "current_user": user # Pass the user object to the template context so that we can access the current user's information in the template. For example, we can display the user's username on the dashboard.
+        }
+    )
