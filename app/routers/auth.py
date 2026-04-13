@@ -61,6 +61,14 @@ def signup_user(request:Request, db:SessionDep, username: Annotated[str, Form()]
                     headers={"WWW-Authenticate": "Bearer"},
                 )
 
+# exercise 
+@auth_router.get("/logout")
+def logout_user(request: Request):
+    response = RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+    response.delete_cookie(key="access_token")
+    flash(request, "Logged out successfully")
+    return response
+
 @auth_router.get("/identify", response_model=UserResponse)
 def get_user_by_id(db: SessionDep, user:AuthDep):
     return user
